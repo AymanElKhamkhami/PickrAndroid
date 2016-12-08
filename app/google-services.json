@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "160495830166",
+    "firebase_url": "https://pickr-2dee0.firebaseio.com",
+    "project_id": "pickr-2dee0",
+    "storage_bucket": "pickr-2dee0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:160495830166:android:77fe891fe61ddae8",
+        "android_client_info": {
+          "package_name": "dmcs.pickr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "160495830166-4nqrnlu4du6so0on6l06tdaj0i9rp9f0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dmcs.pickr",
+            "certificate_hash": "31E61E5159699C1C3CF73160B8E9674E410C3829"
+          }
+        },
+        {
+          "client_id": "160495830166-88rf2qih4srt2esue03l120cgbdpq13v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBG9ng_PtTMGV--ffW52WLOOd2V04nNe8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "160495830166-88rf2qih4srt2esue03l120cgbdpq13v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
