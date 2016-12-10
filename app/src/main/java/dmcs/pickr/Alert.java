@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
-import dmcs.pickr.utils.AlertSnoozeReceiver;
+import dmcs.pickr.utils.AlarmSchedulerReceiver;
 
 public class Alert extends AppCompatActivity {
 
@@ -59,7 +59,14 @@ public class Alert extends AppCompatActivity {
         //sound.stop();
         ringtone.stop();
         vibrator.cancel();
+
+        //Intent intent = new Intent(this, null);
+        PendingIntent piDismiss = PendingIntent.getBroadcast(getApplicationContext(), 11 /*My code set for alarm pending intents*/, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+        alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarm.cancel(piDismiss);
+
         this.finish();
+
     }
 
 
@@ -70,13 +77,15 @@ public class Alert extends AppCompatActivity {
         Calendar now = Calendar.getInstance();
         now.setTimeInMillis(System.currentTimeMillis());
 
+        Intent snoozeIntent = new Intent(this, AlarmSchedulerReceiver.class);
+        PendingIntent piSnooze = PendingIntent.getBroadcast(getApplicationContext(), 11 /*My code set for alarm pending intents*/, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent snoozeIntent = new Intent(this, AlertSnoozeReceiver.class);
-        PendingIntent piSnooze = PendingIntent.getBroadcast(this, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarm.setRepeating(AlarmManager.RTC_WAKEUP, now.getTimeInMillis(), 1000 * 30, piSnooze);
+        alarm.cancel(piSnooze);
 
-        Toast.makeText(getApplicationContext(), "Snoozed for 1 min", Toast.LENGTH_LONG);
-        finish();
+        alarm.set(AlarmManager.RTC_WAKEUP, now.getTimeInMillis() + (5000 * 60), piSnooze);
+
+        Toast.makeText(getApplicationContext(), "Snoozed for 5 minutes", Toast.LENGTH_LONG).show();
+        this.finish();
     }
 
 }

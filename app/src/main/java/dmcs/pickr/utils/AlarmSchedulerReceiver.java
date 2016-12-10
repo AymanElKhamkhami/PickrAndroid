@@ -11,7 +11,7 @@ import dmcs.pickr.Alert;
 /**
  * Created by Ayman on 04/12/2016.
  */
-public class AlertSnoozeReceiver extends BroadcastReceiver {
+public class AlarmSchedulerReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -20,7 +20,7 @@ public class AlertSnoozeReceiver extends BroadcastReceiver {
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
 
-        Toast.makeText(context, "Alert re-started....", Toast.LENGTH_LONG).show();
-        Log.d("Alert:","Alert re-started....");
+        //Toast.makeText(context, "Alert re-started....", Toast.LENGTH_LONG).show();
+        Log.d("Alert:","Alert started....");
     }
 }
