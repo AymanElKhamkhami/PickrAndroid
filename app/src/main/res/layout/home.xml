@@ -7,10 +7,10 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="dmcs.pickr.Home">
+    tools:context=".activities.Home">
 
-    <ImageView
-        android:id="@+id/iamge_profile"
+    <dmcs.pickr.utils.RoundedImageView
+        android:id="@+id/image_profile"
         android:layout_width="@dimen/com_facebook_profilepictureview_preset_size_normal"
         android:layout_height="@dimen/com_facebook_profilepictureview_preset_size_normal"
         android:background="@color/colorAccent"
@@ -20,13 +20,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="tt"
         android:id="@+id/text_hello"
         android:layout_gravity="center"
         android:gravity="center_vertical|center_horizontal"
         android:layout_marginTop="44dp"
         android:textColor="@android:color/holo_blue_dark"
-        android:layout_below="@+id/iamge_profile"
+        android:layout_below="@+id/image_profile"
         android:layout_centerHorizontal="true" />
 
     <Button

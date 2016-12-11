@@ -3,10 +3,14 @@
     package="dmcs.pickr">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -26,37 +30,45 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
 
         <!-- ACTIVITIES -->
-        <activity android:name=".Login">
+        <activity android:name=".activities.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Home" />
+        <activity android:name=".activities.Home" />
         <activity android:name="com.facebook.FacebookActivity" />
-        <activity android:name=".Alert" />
+        <activity
+            android:name=".activities.Alert"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <!-- SERVICES -->
-        <service android:name=".utils.MessagingService">
+        <service android:name=".services.MessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".utils.InstanceIdService">
+        <service android:name=".services.InstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
         <!-- BROADCAST RECEIVERS -->
-        <receiver android:name=".utils.AlarmSchedulerReceiver" />
-        <receiver android:name=".utils.NotificationDismissReceiver" />
-        <receiver android:name=".utils.ReminderSchedulerReceiver" />
+        <receiver android:name=".broadcastreceivers.AlarmSchedulerReceiver" />
+        <receiver android:name=".broadcastreceivers.NotificationDismissReceiver" />
+        <receiver android:name=".broadcastreceivers.ReminderSchedulerReceiver" />
 
-        <activity android:name=".utils.Details"></activity>
+        <activity android:name=".activities.Details" />
+        <activity
+            android:name=".activities.MapSearch"
+            android:label="@string/title_activity_map_search"></activity>
     </application>
 
 </manifest>
