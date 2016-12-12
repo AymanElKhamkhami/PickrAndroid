@@ -54,7 +54,7 @@ public class Home extends AppCompatActivity {
 
             new DownloadImageTask(img_profile).execute(sessionUser.picture);
 
-            subscribeToPushService(sessionUser.getEmail().replace("@", "%"));
+            //subscribeToPushService(sessionUser.getEmail().replace("@", "%"));
         }
 
 

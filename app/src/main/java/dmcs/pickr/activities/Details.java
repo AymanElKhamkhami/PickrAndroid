@@ -233,7 +233,8 @@ public class Details extends FragmentActivity implements OnMapReadyCallback {
             txt_phone.setText(result.getMobile().isEmpty() ? "Mobile: NA" : result.getMobile());
             txt_car.setText(result.getCarModel().isEmpty() ? "" : result.getCarModel());
             String[] splittedDate = splitDate(result.getPickupTime());
-            txt_pickup.setText("Pick up on " + splittedDate[0] + " " + splittedDate[1] + " at " + splittedDate[2]);
+            String pickupText = splittedDate[1].equals("01/01/1900") ?  "Pending request" : "Pick up on " + splittedDate[0] + " " + splittedDate[1] + " at " + splittedDate[2];
+            txt_pickup.setText(pickupText);
 
             pickupPoint = new LatLng(result.getPickupLatitude(), result.getPickupLongitude());
             dropoffPoint = new LatLng(result.getDropoffLatitude(), result.getDropoffLongitude());
