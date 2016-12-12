@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
@@ -13,11 +14,15 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,6 +44,8 @@ import dmcs.pickr.activities.MapSearch;
 import dmcs.pickr.broadcastreceivers.AlarmSchedulerReceiver;
 import dmcs.pickr.broadcastreceivers.NotificationDismissReceiver;
 import dmcs.pickr.broadcastreceivers.ReminderSchedulerReceiver;
+import dmcs.pickr.models.Preferences;
+import dmcs.pickr.models.UserDetails;
 
 /**
  * Created by Ayman on 04/12/2016.
@@ -65,7 +72,6 @@ public class MessagingService extends FirebaseMessagingService {
         //      "content-available": true,
         //      "priority":"high",
         //      "data":{
-        //          "title":"Feedback",
         //          "text":"Ayman",
         //          "type":"approved",
         //          "sender":"ayman.khm%gmail.com",
@@ -85,10 +91,10 @@ public class MessagingService extends FirebaseMessagingService {
         //message will contain the Push Message
         //String message = remoteMessage.getData().get("message") + "-----";
         String senderName = remoteMessage.getData().get("text");//remoteMessage.getNotification().getBody();
-        String title = remoteMessage.getData().get("title");//remoteMessage.getNotification().getTitle();
-        String senderEmail = remoteMessage.getData().get("sender").replace('%','@');
+        //String title = remoteMessage.getData().get("title");//remoteMessage.getNotification().getTitle();
+        String senderEmail = remoteMessage.getData().get("sender");
+        String recipientEmail = remoteMessage.getData().get("recipient");
         //imageUri will contain URL of the image to be displayed with Notification
-        String imageUri = remoteMessage.getData().get("image");
         //If the key AnotherActivity has  value as True then when the user taps on notification, in the app AnotherActivity will be opened.
         //If the key AnotherActivity has  value as False then when the user taps on notification, in the app MainActivity will be opened.
 
@@ -110,7 +116,24 @@ public class MessagingService extends FirebaseMessagingService {
             sendAlert();
         }*/
 
-        createNotification(title, senderName, notifIcon, TrueOrFlase, type, date, id, senderEmail, pictureUrl);
+        UserDetails user = getSessionUser();
+
+        if(user != null && user.getEmail().equals(recipientEmail)) {
+
+            if(type.equals("selfreminder")) {
+                //Even though the reminder is triggered from the driver, the sender is set as the passenger
+                scheduleReminder(date, senderName, senderEmail, id);
+                scheduleAlarm(date, senderName, senderEmail, id);
+            }
+
+            else {
+                createNotification(senderName, notifIcon, TrueOrFlase, type, date, id, senderEmail, pictureUrl);
+            }
+
+        }
+
+
+
     }
 
     /*
@@ -122,7 +145,7 @@ public class MessagingService extends FirebaseMessagingService {
 
     }*/
 
-    private void createNotification(String messageTitle, String messageBody, Bitmap image, String TrueOrFalse, String type, String rawDate, int id, String senderEmail, String picUrl) {
+    private void createNotification(String messageBody, Bitmap image, String TrueOrFalse, String type, String rawDate, int id, String senderEmail, String picUrl) {
 
         int notifId = Integer.parseInt(id + NOTIF_CODE + String.valueOf(ThreadLocalRandom.current().nextInt(0, 99)));
 
@@ -134,9 +157,9 @@ public class MessagingService extends FirebaseMessagingService {
         PendingIntent piOpen = PendingIntent.getActivity(this, 0 /* Request code */, openIntent, PendingIntent.FLAG_ONE_SHOT);
 
         //set intents and pending intents to call service on click of "snooze" action button of notification
-        Intent snoozeIntent = new Intent();
+        /*Intent snoozeIntent = new Intent();
         snoozeIntent.setAction("ACTION_SNOOZE");
-        PendingIntent piSnooze = PendingIntent.getService(this, 0, snoozeIntent, 0);
+        PendingIntent piSnooze = PendingIntent.getService(this, 0, snoozeIntent, 0);*/
 
         //set intents and pending intents to call service on click of "dismiss" action button of notification
         Intent dismissIntent = new Intent(this, NotificationDismissReceiver.class);
@@ -148,7 +171,7 @@ public class MessagingService extends FirebaseMessagingService {
 
         Intent detailsIntent = new Intent(this, Details.class);
         detailsIntent.putExtra("ID", id);
-        PendingIntent piDetails = PendingIntent.getActivity(this, 0, detailsIntent, 0);
+        PendingIntent piDetails = PendingIntent.getActivity(this, notifId, detailsIntent, PendingIntent.FLAG_UPDATE_CURRENT); // update current otherwise old ID values will reside
 
         //To make the notification expandable
         /*NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
@@ -165,8 +188,6 @@ public class MessagingService extends FirebaseMessagingService {
                 //.setLargeIcon(image)/*Notification icon image*/
                 .setSmallIcon(R.drawable.notification_icon) //this will appear as a tiny icon on the side if a large icon is set.
                 .setColor(getResources().getColor(R.color.colorNotification))
-                .setContentTitle(messageTitle)
-
                 //.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(image))/*Notification with Image*/
                 //.setAutoCancel(false)
                 .setOngoing(true) // this doesnt allow the notification to be swiped away
@@ -183,9 +204,10 @@ public class MessagingService extends FirebaseMessagingService {
 
             text = messageBody + " asks to join your ride on " + dateElements[0] + " " + dateElements[1] + ".";
             notificationBuilder
-                    .addAction(R.drawable.ic_dismiss, "DISMISS", piDismiss)
-                    .addAction(R.drawable.ic_details, "DETAILS", piDetails)
-                    .setContentIntent(piOpen);
+                    .setContentTitle("Ride request")
+                    .addAction(R.drawable.ic_dismiss, "DISMISS", piDismiss);
+                    //.addAction(R.drawable.ic_details, "DETAILS", piDetails)
+                    //.setContentIntent(piDetails);
         }
 
 
@@ -196,9 +218,10 @@ public class MessagingService extends FirebaseMessagingService {
             scheduleAlarm(rawDate, messageBody, senderEmail, id);
 
             notificationBuilder
+                    .setContentTitle("Feedback")
                     .addAction(R.drawable.ic_dismiss, "DISMISS", piDismiss)
                     .addAction(R.drawable.ic_details, "DETAILS", piDetails)
-                    .setContentIntent(piOpen);
+                    .setContentIntent(piDetails);
         }
 
 
@@ -207,6 +230,7 @@ public class MessagingService extends FirebaseMessagingService {
             text = messageBody + " couldn't accept your ride request on " + dateElements[0] + " " + dateElements[1] + "." ;
 
             notificationBuilder
+                    .setContentTitle("Feedback")
                     .addAction(R.drawable.ic_dismiss, "DISMISS", piDismiss);
         }
 
@@ -320,9 +344,6 @@ public class MessagingService extends FirebaseMessagingService {
     }
 
 
-    /*
-    *To get a Bitmap image from the URL received
-    * */
     private Bitmap getBitmapfromUrl(String imageUrl) {
         try {
             URL url = new URL(imageUrl);
@@ -454,25 +475,22 @@ public class MessagingService extends FirebaseMessagingService {
     }
 
 
-    /** Create a File for saving an image or video */
-    private  File getOutputMediaFile(String fileName){
-        // To be safe, you should check that the SDCard is mounted
-        // using Environment.getExternalStorageState() before doing this.
-        //File mediaStorageDir = new File(getApplicationContext().getFilesDir() + "/images") ;
-        File mediaStorageDir = new File(Environment.getExternalStorageDirectory().toString() + "/PICKR");
+    private UserDetails getSessionUser() {
 
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        File mediaFile = null;
-        // Create the storage directory if it does not exist
-        if (! mediaStorageDir.exists()){
-            mediaStorageDir.mkdirs();
+        try {
+            JSONObject json = new JSONObject(preferences.getString("userDetails", ""));
+            Log.d("JSON", json.toString());
+            JSONObject jsonPrefs = json.getJSONObject("preferences");
+            Preferences userPrefs = new Preferences(jsonPrefs.getBoolean("smoking"), jsonPrefs.getBoolean("music"), jsonPrefs.getBoolean("pets"), jsonPrefs.getInt("talking"));
+            UserDetails user = new UserDetails(json.getString("email"), json.getString("username"), "", json.getInt("reputation"), userPrefs, json.getString("carModel"), json.getString("firstName"), json.getString("surname"), json.getString("gender"), json.getString("mobile"), json.getString("picture"), json.getString("address"), json.getString("mode"));
+            return user;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return  null;
         }
 
-        mediaFile = new File(mediaStorageDir.getPath() + File.separator + fileName + ".jpg");
-
-        return mediaFile;
     }
-
 }

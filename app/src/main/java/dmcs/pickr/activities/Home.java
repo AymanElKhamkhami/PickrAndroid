@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
@@ -131,7 +132,7 @@ public class Home extends AppCompatActivity {
         FirebaseMessaging.getInstance().subscribeToTopic(topic);
 
         Log.d("AndroidBash", "Subscribed");
-        //Toast.makeText(Login.this, "Subscribed to" + topic, Toast.LENGTH_SHORT).show();
+        Toast.makeText(Home.this, "Subscribed to " + topic, Toast.LENGTH_SHORT).show();
 
         String token = FirebaseInstanceId.getInstance().getToken();
 
@@ -154,7 +155,7 @@ public class Home extends AppCompatActivity {
             super.onPreExecute();
 
             //this method will be running on UI thread
-            pdLoading.setMessage("\tDownloading data...");
+            pdLoading.setMessage("\tLoading...");
             pdLoading.setCancelable(false);
             pdLoading.show();
 

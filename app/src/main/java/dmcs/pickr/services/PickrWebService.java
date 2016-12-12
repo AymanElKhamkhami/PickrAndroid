@@ -29,6 +29,7 @@ package dmcs.pickr.services;
 public class PickrWebService {
 
     private final String urlString = "http://pickrwebservice.somee.com/Handler.ashx";
+    //private final String urlString = "192.168.0.103/Handler.ashx";
 
     private static String convertStreamToUTF8String(InputStream stream) throws IOException {
         String result = "";
@@ -143,6 +144,37 @@ public class PickrWebService {
         o.put("method", "UserAuthentication");
         p.put("Email",mapObject(Email));
         p.put("Password",mapObject(Password));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+    public JSONObject GetRideDetails(int RequestId, String PartnerType) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","PickrWebService");
+        o.put("method", "GetRideDetails");
+        p.put("RequestId",mapObject(RequestId));
+        p.put("PartnerType",mapObject(PartnerType));
+        o.put("parameters", p);
+        String s = o.toString();
+        String r = load(s);
+        result = new JSONObject(r);
+        return result;
+    }
+
+
+    public JSONObject UpdateDeviceToken(String Email, String Token) throws Exception {
+        JSONObject result = null;
+        JSONObject o = new JSONObject();
+        JSONObject p = new JSONObject();
+        o.put("interface","PickrWebService");
+        o.put("method", "UpdateDeviceToken");
+        p.put("Email",mapObject(Email));
+        p.put("Token",mapObject(Token));
         o.put("parameters", p);
         String s = o.toString();
         String r = load(s);

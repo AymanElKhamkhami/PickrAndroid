@@ -45,7 +45,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import dmcs.pickr.R;
-import dmcs.pickr.utils.JSONParser;
+import dmcs.pickr.utils.RESTJSONParser;
 import dmcs.pickr.services.PickrWebService;
 import dmcs.pickr.models.UserDetails;
 
@@ -82,7 +82,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             startActivityForResult(intent, 0);
         }
 
-        //subscribeToPushService("testTopic");
+
 
 
         callback = CallbackManager.Factory.create();
@@ -163,19 +163,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     }
 
-
-    private void subscribeToPushService(String topic) {
-        FirebaseMessaging.getInstance().subscribeToTopic(topic);
-
-        Log.d("AndroidBash", "Subscribed");
-        //Toast.makeText(Login.this, "Subscribed to" + topic, Toast.LENGTH_SHORT).show();
-
-        String token = FirebaseInstanceId.getInstance().getToken();
-
-        // Log and toast
-        Log.d("AndroidBash", token);
-        //Toast.makeText(Login.this, token, Toast.LENGTH_SHORT).show();
-    }
 
 
     public void onClick(View v) {
@@ -340,7 +327,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 JSONObject jsonObj = api.UserAuthentication(params[0], params[1]);
 
                 //Parse the JSON Object to boolean
-                JSONParser parser = new JSONParser();
+                RESTJSONParser parser = new RESTJSONParser();
                 userAuth = parser.parseUserAuthentication(jsonObj);
 
                 if(userAuth) {
@@ -413,7 +400,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 JSONObject jsonObj = api.CheckUserExistence(params[0]);
 
                 //Parse the JSON Object to boolean
-                JSONParser parser = new JSONParser();
+                RESTJSONParser parser = new RESTJSONParser();
                 userExists = parser.parseUserExistence(jsonObj);
 
                 if(userExists) {

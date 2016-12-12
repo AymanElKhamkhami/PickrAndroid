@@ -43,8 +43,8 @@ public class Search extends FragmentActivity implements OnMapReadyCallback {
     private Activity activity = this;
     private AutocompleteAdapter adapterStart;
     private AutocompleteAdapter adapterDestination;
-    private AutoCompleteTextView autocompleteViewStart;
-    private AutoCompleteTextView autocompleteViewDestination;
+    public AutoCompleteTextView autocompleteViewStart;
+    public AutoCompleteTextView autocompleteViewDestination;
     private ImageView clearBtn;
     private ImageView clearBtn2;
     private LatLng centerLocation;

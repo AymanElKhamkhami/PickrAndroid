@@ -25,6 +25,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import dmcs.pickr.activities.Details;
+import dmcs.pickr.activities.Search;
+
 
 /**
  * Created by Ayman on 29/05/2016.
@@ -87,12 +90,23 @@ public class DirectionsParserTask extends AsyncTask<String, Integer, DirectionsP
 
         Toast.makeText(mapHelper.activity.getBaseContext(), distance + " km / " + duration + " mins", Toast.LENGTH_LONG).show();
 
-        PolygonOptions buffer = result.buffer;
-        buffer.strokeWidth(0);
-        buffer.fillColor(0x7F729E47);
-        mapHelper.range = mapHelper.mMap.addPolygon(buffer);
+        if(mapHelper.activity instanceof Search) {
+            PolygonOptions buffer = result.buffer;
+            buffer.strokeWidth(0);
+            buffer.fillColor(0x7F729E47);
+            mapHelper.range = mapHelper.mMap.addPolygon(buffer);
+            mapHelper.mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getRouteCenter(buffer),100));
+        }
 
-        mapHelper.mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getRouteCenter(buffer),100));
+        else if(mapHelper.activity instanceof Details){
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            builder.include(mapHelper.startMarker.getPosition());
+            builder.include(mapHelper.destMarker.getPosition());
+            mapHelper.mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(),200));
+
+        }
+
+
 
     }
 

@@ -6,7 +6,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.widget.AutoCompleteTextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import dmcs.pickr.activities.Details;
+import dmcs.pickr.activities.Search;
+
 /**
  * Created by Ayman on 11/12/2016.
  */
@@ -40,8 +42,9 @@ public class MapHelper {
     public Marker startMarker;
     public Marker destMarker;
     public ArrayList<Marker> waypointsMarkers = new ArrayList<>();
-    //public AutoCompleteTextView autocompleteViewStart;
-    //public AutoCompleteTextView autocompleteViewDestination;
+    public boolean draggable = false;
+    public String titleStart = "Start";
+    public String titleDestination = "Destination";
 
 
     public MapHelper () {}
@@ -63,10 +66,20 @@ public class MapHelper {
 //        if(address!=null && !address.equals(""))
 //            snippet = address;
 
+        if(activity instanceof Details) {
+            titleStart = "Pick up";
+            titleDestination = "Drop off";
+        }
+
         if (label == 1) {
-            //autocompleteViewDestination.setEnabled(true);
+
+            if(activity instanceof Search) {
+                ((Search) activity).autocompleteViewDestination.setEnabled(true);
+                draggable = true;
+            }
+
             if (markersCount == 0) {
-                startMarker = mMap.addMarker(new MarkerOptions().position(position).title("Start").draggable(true).snippet(snippet));
+                startMarker = mMap.addMarker(new MarkerOptions().position(position).title(titleStart).draggable(draggable).snippet(snippet));
                 markersCount++;
             } else {
                 startMarker.setPosition(position);
@@ -76,7 +89,7 @@ public class MapHelper {
             }
         } else if (label == 2) {
             if (markersCount == 1) {
-                destMarker = mMap.addMarker(new MarkerOptions().position(position).title("Destination").draggable(true).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)).snippet(snippet));
+                destMarker = mMap.addMarker(new MarkerOptions().position(position).title(titleDestination).draggable(draggable).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)).snippet(snippet));
                 calculateRoute(startMarker.getPosition(), destMarker.getPosition());
                 markersCount++;
             } else {
@@ -87,7 +100,7 @@ public class MapHelper {
 
 
         } else if (label == 3) {
-            Marker waypoint = mMap.addMarker(new MarkerOptions().position(position).title("Waypoint").draggable(true).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).snippet(snippet));
+            Marker waypoint = mMap.addMarker(new MarkerOptions().position(position).title("Waypoint").draggable(draggable).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).snippet(snippet));
             //waypoint.showInfoWindow();
             waypointsMarkers.add(waypoint);
             markersCount++;

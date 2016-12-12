@@ -29,32 +29,26 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
-                android:text="John Doe"
-                android:id="@+id/textView2" />
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:id="@+id/text_name" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="john.doe@pickr.com"
-                android:id="@+id/textView3"
-                android:layout_marginTop="5dp" />
+                android:id="@+id/text_email"
+                android:layout_marginTop="2dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="202-555-0135"
-                android:id="@+id/textView4"
-                android:layout_marginTop="3dp" />
+                android:id="@+id/text_mobile" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Fiat Punto Eva (Black)"
-                android:id="@+id/textView5"
-                android:layout_marginTop="3dp" />
+                android:id="@+id/text_carmodel" />
         </LinearLayout>
 
     </LinearLayout>
@@ -78,8 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Pick-up on Monday 12/12/2016 at 10:45"
-            android:id="@+id/textView6"
+            android:id="@+id/text_pickup"
             android:layout_marginLeft="10dp" />
 
 

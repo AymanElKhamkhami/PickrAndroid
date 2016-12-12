@@ -38,7 +38,7 @@ public class ReminderSchedulerReceiver extends BroadcastReceiver {
         int reminderId = intent.getExtras().getInt("REMINDER ID");
 
         //Fire notification
-        createNotification(context, "Reminder", senderName, date, id);
+        createNotification(context, senderName, date, id);
 
         //Disable alarm
         PendingIntent piDismiss = PendingIntent.getBroadcast(context.getApplicationContext(), reminderId /*My code set for reminder pending intents*/, new Intent().putExtra("NotificationID", Integer.valueOf(id + "1")), 0);
@@ -49,7 +49,7 @@ public class ReminderSchedulerReceiver extends BroadcastReceiver {
     }
 
 
-    private void createNotification(Context context, String messageTitle, String messageBody, String rawDate, int id) {
+    private void createNotification(Context context, String messageBody, String rawDate, int id) {
 
         int notifId = Integer.parseInt(id + NOTIF_CODE + String.valueOf(ThreadLocalRandom.current().nextInt(0, 99)));
 
@@ -67,7 +67,7 @@ public class ReminderSchedulerReceiver extends BroadcastReceiver {
 
         Intent detailsIntent = new Intent(context, Details.class);
         detailsIntent.putExtra("ID", id);
-        PendingIntent piDetails = PendingIntent.getActivity(context, 0, detailsIntent, 0);
+        PendingIntent piDetails = PendingIntent.getActivity(context, notifId, detailsIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         String text = "";
@@ -79,7 +79,7 @@ public class ReminderSchedulerReceiver extends BroadcastReceiver {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.notification_icon) //this will appear as a tiny icon on the side if a large icon is set.
                 .setColor(context.getResources().getColor(R.color.colorNotification))
-                .setContentTitle(messageTitle)
+                .setContentTitle("Reminder")
                 .setContentText(text)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
                 .setOngoing(true) // this doesnt allow the notification to be swiped away

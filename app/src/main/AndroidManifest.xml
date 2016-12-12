@@ -47,6 +47,11 @@
         <activity
             android:name=".activities.Alert"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".activities.Details" />
+        <activity
+            android:name=".activities.MapSearch"
+            android:label="@string/title_activity_map_search"></activity>
+
 
         <!-- SERVICES -->
         <service android:name=".services.MessagingService">
@@ -65,10 +70,7 @@
         <receiver android:name=".broadcastreceivers.NotificationDismissReceiver" />
         <receiver android:name=".broadcastreceivers.ReminderSchedulerReceiver" />
 
-        <activity android:name=".activities.Details" />
-        <activity
-            android:name=".activities.MapSearch"
-            android:label="@string/title_activity_map_search"></activity>
+
     </application>
 
 </manifest>
